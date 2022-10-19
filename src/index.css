@@ -5,6 +5,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: rgb(23,133,113);
+background: linear-gradient(90deg, rgba(23,133,113,0.5298494397759104) 0%, rgba(255,255,255,1) 89%);
 }
 
 code {
@@ -53,8 +55,10 @@ input,select
 {
   padding:10px;
   border: none;
-  background-color: transparent;
-  box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.5);
+  background-color: white;
+  color: black;
+  box-shadow: 0px 0px 5px 1px rgba(160, 160, 160, 0.5);
   width: 80%;
+  border-radius: 5px;
   margin: 20px auto;
 }

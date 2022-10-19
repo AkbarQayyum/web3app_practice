@@ -105,7 +105,7 @@ export default function Details({ provider, connectwallet, account }) {
                 type="text"
                 name="message"
                 style={{ width: "80%" }}
-                placeholder="Enter receiver amount.."
+                placeholder="Enter receiver address.."
               />
             </div>
 
