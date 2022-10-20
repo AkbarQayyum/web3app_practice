@@ -2,6 +2,7 @@
   "name": "web3modal_practice",
   "version": "0.1.0",
   "private": true,
+  "homepage": "http://AkbarQayyum.github.io/web3app_practice",
   "dependencies": {
     "@coinbase/wallet-sdk": "^3.5.3",
     "@emotion/react": "^11.10.4",
@@ -23,8 +24,8 @@
   },
   "scripts": {
     "start": "react-app-rewired start",
-    "predeploy" : "npm run build",
-"deploy" : "gh-pages -d build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject"
