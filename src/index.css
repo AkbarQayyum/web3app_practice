@@ -1,64 +1,103 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: rgb(23,133,113);
-background: linear-gradient(90deg, rgba(23,133,113,0.5298494397759104) 0%, rgba(255,255,255,1) 89%);
+background-color: black;
+  color: rgb(255, 255, 255);
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
-
-.open{
+.open {
   height: auto;
   transition: 0.5s;
   transform: scaleY(1);
-  margin: 20px auto;
+  position: absolute;
+  background-color: rgba(172, 172, 172, 0.418);
+  z-index: 10;
+  top: 0px;
+  width: 100%;
+  height:100vh
 }
-.close
-{
+.close {
   transform: scaleY(0);
   transition: 0.5s;
   overflow: hidden;
-height:0px auto;
+  height: 0px auto;
 }
-h1{
-  color:rgb(44, 44, 44);
+h1 {
   font-size: 35px;
 }
-h1 span
-{
-  color:rgb(43, 191, 250);
+h1 span {
+  color: rgb(43, 191, 250);
 }
-button
-{
+button {
   padding: 10px 20px;
   border: none;
-  background:rgb(0, 151, 211);
-  box-shadow: 0px 0px 8px 2px rgb(187, 187, 187);
-  color:rgb(255, 255, 255);
+  background: rgb(0, 151, 211);
+  box-shadow: 0px 0px 5px 1px rgb(59, 59, 59);
+  color: rgb(255, 255, 255);
   border-radius: 5px;
   font-weight: bold;
 }
-button:hover
-{
-   background:rgb(4, 125, 173);
-  box-shadow: 0px 0px 8px 2px rgb(143, 143, 143);
+button:hover {
+  background: rgb(4, 125, 173);
+  box-shadow: 0px 0px 8px 2px rgb(71, 71, 71);
 }
-input,select
-{
-  padding:10px;
+input,
+select {
+  padding: 10px;
   border: none;
   background-color: white;
-  color: black;
-  box-shadow: 0px 0px 5px 1px rgba(160, 160, 160, 0.5);
+  box-shadow: 0px 0px 5px 1px rgba(70, 69, 69, 0.5);
   width: 80%;
   border-radius: 5px;
   margin: 20px auto;
+}
+.header {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 20px;
+  box-shadow: 0px 0px 5px 1px rgb(70, 70, 70);
+}
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 30px;
+}
+.container div {
+  width: 45%;
+  margin: 10px;
+  align-items: center;
+}
+.parent {
+  box-shadow: 0px 0px 5px 1px rgb(73, 73, 73);
+    margin: 20px auto;
+  width: 60%;
+}
+.modal
+{
+  padding:50px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  background-color: white;
+  color: black;
+}
+@media screen AND (max-width:800px) {
+  .container div
+  {
+    width: 100%;
+  }
+  
 }

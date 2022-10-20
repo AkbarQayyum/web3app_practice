@@ -1,178 +1,127 @@
 import React, { useState } from "react";
-import { toHex } from "../utils";
+import { toHex ,truncateAddress} from "../utils";
+import Modal from "./Modal";
 import { networkParams } from "./network";
+import {Table,TableCell,TableRow,TableHead, TableBody} from '@mui/material'
+import { ethers } from "ethers";
+export default function Details({ provider, connectwallet, account, balance }) {
 
-export default function Details({ provider, connectwallet, account }) {
-  const [anchor, setanchor] = useState("sign");
-  const [network, setnetwork] = useState(null);
-  const [message, setmessage] = useState("");
-  const [signedMessage, setsignMessage] = useState("");
-  const [signature, setsignature] = useState(0);
-  const [varified, setvarified] = useState(null);
-
-  async function changeNetwork(e) {
-    try {
-      await provider.provider.request({
-        method: "wallet_switchEthereumChain",
-        params: [{ chainId: toHex(network) }],
-      });
-      connectwallet();
-    } catch (switchError) {
-      if (switchError.code === 4902) {
-        try {
-          await provider.provider.request({
-            method: "wallet_addEthereumChain",
-            params: [networkParams[toHex(network)]],
-          });
-          connectwallet();
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    }
-  }
-
-  async function SignMessage() {
-    try {
-      const signa = await provider.provider.request({
-        method: "personal_sign",
-        params: [message, account[0]],
-      });
-      setsignMessage(message);
-      setsignature(signa);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async function VarifyMessage() {
-    try {
-      let vari = await provider.provider.request({
-        method: "personal_ecRecover",
-        params: [signedMessage, signature],
-      });
-      setvarified(vari===account[0].toLowerCase());
-    } catch (error) {
-      console.log(error);
-    }
-    
-  }
-
+  const [open, setopen] = useState(false)
+  const [state,setstate]=useState(null)
+  const [verify,setverify]=useState(null)
+  const [transactions,settransactions]=useState([])
+  
   return (
     <>
-      <div>
-        {varified !== null ? (
+      <div className="parent">
+        <h3>ACTIONS</h3>
+        <h2 style={{color:'skyblue'}}>{ethers.utils.formatEther(balance)} ETH</h2>
+        {verify !== null ? (
           <>
-            {varified === true ? (
-              <h4 style={{color:'green'}}>Message Varified</h4>
+            {verify === true ? (
+              <h4 style={{ color: "green" }}>Message Verified</h4>
             ) : (
-              <h4 style={{color:'red'}}>Message Denied</h4>
+              <h4 style={{ color: "red" }}>Message Denied</h4>
             )}
           </>
         ) : null}
+        <div className="container">
+          <div>
+            <button
+              onClick={() => {
+                setopen(!open);
+                setstate("sign");
+              }}
+            >
+              Sign Message
+            </button>
+          </div>
+          <div>
+            <button
+              onClick={() => {
+                setopen(!open);
+                setstate("verify");
+              }}
+            >
+              Verify Message
+            </button>
+          </div>
+          <div>
+            <button
+              onClick={() => {
+                setopen(!open);
+                setstate("send");
+              }}
+            >
+              Send Transaction
+            </button>
+          </div>
+          <div>
+            <button
+              onClick={() => {
+                setopen(!open);
+                setstate("change");
+              }}
+            >
+              Change Network
+            </button>
+          </div>
+        </div>
       </div>
-      <div style={{ display: "flex", justifyContent: "space-around",flexWrap:'wrap' }}>
-        <div>
-          <button
-            onClick={(e) => {
-              setanchor("sign");
-            }}
-          >
-            Sign Message
-          </button>
-          <div className={anchor === "sign" ? "open" : "close"}>
-            <div>
-              <input
-                type="text"
-                name="message"
-                style={{ width: "80%" }}
-                placeholder="Sign Message..."
-                onChange={(e) => {
-                  setmessage(e.target.value);
-                }}
-              />
-            </div>
-            <button style={{ marginBottom: "auto" }} onClick={SignMessage}>
-              Sign
-            </button>
-          </div>
-        </div>
-        <div>
-          <button onClick={() => setanchor("send")}>Send Transaction</button>
-          <div className={anchor === "send" ? "open" : "close"}>
-            <div>
-              <input
-                type="text"
-                name="message"
-                style={{ width: "80%" }}
-                placeholder="Enter receiver address.."
-              />
-            </div>
+      <Modal
+        open={open}
+        setopen={setopen}
+        state={state}
+        provider={provider}
+        account={account}
+        connectwallet={connectwallet}
+        setverify={setverify}
+        transactions={transactions}
+        settransactions={settransactions}
+      />
 
-            <div>
-              <input
-                type="text"
-                name="message"
-                style={{ width: "80%" }}
-                placeholder="Enter Amount in Ether.."
-              />
-            </div>
-            <button>Send</button>
-          </div>
-        </div>
-        <div>
-          <button
-            onClick={(e) => {
-              setanchor("varify");
-            }}
-          >
-            Varify Message
-          </button>
-          <div className={anchor === "varify" ? "open" : "close"}>
-            <div>
-              <input
-                type="text"
-                name="message"
-                style={{ width: "80%" }}
-                placeholder="varify transaction.."
-                              defaultValue={signedMessage}
-                              onChange={(e)=>{setsignMessage(e.target.value)}}
-              />
-            </div>
-            <button onClick={VarifyMessage}>Varify</button>
-          </div>
-        </div>
-        <div>
-          <button
-            onClick={(e) => {
-              setanchor("change");
-            }}
-          >
-            Change Network
-          </button>
-          <div className={anchor === "change" ? "open" : "close"}>
-            <div>
-              <select
-                placeholder="Select Network"
-                onChange={(e) => {
-                  setnetwork(e.target.value);
-                }}
-              >
-                <option>Select Network</option>
-                <option value={1}>Mainnet</option>
-                <option value={3}>Ropsten</option>
-                <option value={4}>Rinkeby</option>
-                <option value={5}>Goerli</option>
-                <option value={42}>Kovan</option>
-                <option value={1666600000}>Harmony</option>
-                <option value={42220}>Celo</option>
-              </select>
-            </div>
-            <button style={{ marginBottom: "auto" }} onClick={changeNetwork}>
-              Change
-            </button>
-          </div>
-        </div>
+      <div>
+        <Table sx={{width:{md:'60%',xs:'100%'},margin:'10px auto'}}>
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ color: "white", textAlign: "center",fontWeight:'bold' }}>
+                Sender
+              </TableCell>
+              <TableCell sx={{ color: "white", textAlign: "center",fontWeight:'bold' }}>
+                Receiver
+              </TableCell>
+              <TableCell sx={{ color: "white", textAlign: "center",fontWeight:'bold' }}>
+                Amount
+              </TableCell>
+              <TableCell sx={{ color: "white", textAlign: "center",fontWeight:'bold' }}>
+                Block Number
+              </TableCell>
+            
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {
+             transactions && transactions.map((m)=>{
+               return (
+                 <TableRow>
+                   <TableCell sx={{ color: "white", textAlign: "center" }}>
+                     {truncateAddress(m.from).toString()}
+                   </TableCell>
+                   <TableCell sx={{ color: "white", textAlign: "center" }}>
+                     {truncateAddress(m.to).toString()}
+                   </TableCell>
+                   <TableCell sx={{ color: "white", textAlign: "center" }}>
+                     {truncateAddress(m.transactionHash).toString()}
+                   </TableCell>
+                   <TableCell sx={{ color: "white", textAlign: "center" }}>
+                     {m.blockNumber}
+                   </TableCell>
+                 </TableRow>
+               );
+              })
+            }
+          </TableBody>
+        </Table>
       </div>
     </>
   );

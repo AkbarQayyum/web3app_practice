@@ -2,6 +2,11 @@ import { ethers } from "ethers";
 import React, { useEffect, useState } from "react";
 import { web3Modal } from "./components/web3modal";
 import Details from "./components/Details";
+import { truncateAddress } from "./utils";
+
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+
 export default function App() {
   const [state, setstate] = useState(null);
   const [isconnected, setisconnected] = useState(false);
@@ -24,7 +29,7 @@ export default function App() {
     const instance = await web3Modal.connect();
     const provider = new ethers.providers.Web3Provider(instance);
     const signer = await provider.getSigner();
-    const acc=await provider.listAccounts()
+    const acc = await provider.listAccounts();
     const net = await provider.getNetwork();
     if (signer) {
       const Balance = await signer.getBalance();
@@ -38,7 +43,7 @@ export default function App() {
       setprovider(provider);
       setsigner(signer);
       setnetwork(net);
-      setaccount(acc)
+      setaccount(acc);
     }
     setisconnected(true);
   }
@@ -50,54 +55,65 @@ export default function App() {
   }
 
   return (
-    <div  style={{ textAlign: "center",padding:'50px' }}>
-      <div   >
-        <h1>
-          Let's Connect With
-          <span >
-            Web3Modal
-          </span>
-        </h1>
-      </div>
-      <div >
-        {isconnected ? (
-          <button  onClick={Disconnect}>
-            Disconnect Wallet
-          </button>
-        ) : (
-          <button  onClick={connectwallet}>
-            Connect Wallet
-          </button>
-        )}
-      </div>
+    <div style={{ textAlign: "center" }}>
       <div>
         {state !== null ? (
           <div>
-            <div>
-              <h3>
-                Connected Network
-              </h3>
-              <p >
-                {state.network.name} {state.network.chainId}
-              </p>
-            </div>
-            <h3>Signer Address</h3>
-            <div>
-              <p style={{wordBreak:'break-all'}}>{state.address}</p>
-            </div>
-            <h3>Signer Balance</h3>
-            <div>
-              <p >
-                {ethers.utils.formatEther(state.balance)} ETH
-              </p>
+            <div className="header">
+              <div>
+                <p style={{display:'flex',alignItems:'center'}}>
+                  <CheckCircleIcon sx={{color:'green'}} />
+                  Connected Network
+                </p>
+                <div style={{ fontWeight: "bold" }}>
+                  {state.network.name}
+                  {state.network.chainId}
+                </div>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-evenly",
+                  alignItems: "center",
+                }}
+              >
+                <div style={{margin:'10px'}}><AccountCircleIcon sx={{fontSize:'50px'}} /></div>
+                <div style={{ fontWeight: "bold" }}>
+                  <div> {truncateAddress(state.address)}</div>
+                  <div>
+                    {isconnected ? (
+                      <div
+                        onClick={Disconnect}
+                        style={{ cursor: "pointer", color: "red" }}
+                      >
+                        Disconnect Wallet
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        ) : null}
+        ) : (
+          <button onClick={connectwallet} style={{marginTop:'30px'}}>Connect Wallet</button>
+        )}
       </div>
-      <div >
+      <div>
+        <h1>
+          Let's Connect With
+          <span>Web3Modal</span>
+        </h1>
+      </div>
+
+      <div>
         {state !== null ? (
           <>
-            <Details provider={provider} connectwallet={connectwallet} account={account}  />
+            <Details
+              provider={provider}
+              connectwallet={connectwallet}
+              account={account}
+              balance={state.balance}
+            />
           </>
         ) : null}
       </div>
